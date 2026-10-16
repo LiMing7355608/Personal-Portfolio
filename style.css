@@ -1,0 +1,377 @@
+
+/* ------------------------------ 设计变量 ------------------------------ */
+:root {
+    --bg: #f9f8f6;
+    --fg: #1c1c1c;
+
+    --fg-secondary: rgba(28, 28, 28, 0.7);
+    --fg-tertiary: rgba(28, 28, 28, 0.4);
+    --line: rgba(28, 28, 28, 0.1);
+    --line-strong: rgba(28, 28, 28, 0.4);
+
+    --tint: rgba(28, 28, 28, 0.02);
+
+    --serif: "Iowan Old Style", "Palatino Linotype", Palatino, Georgia, "Times New Roman", "Songti SC", "SimSun", serif;
+    --sans: -apple-system, BlinkMacSystemFont, "Segoe UI", "Helvetica Neue", Arial, "PingFang SC", "Microsoft YaHei", sans-serif;
+
+    --ease: cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* ------------------------------ 基础重置 ------------------------------ */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+html {
+    scroll-behavior: smooth;
+    -webkit-text-size-adjust: 100%;
+}
+
+body {
+    font-family: var(--sans);
+    font-size: 1rem;
+    line-height: 1.75;
+    background-color: var(--bg);
+    color: var(--fg);
+    -webkit-font-smoothing: antialiased;
+}
+
+img {
+    display: block;
+    max-width: 100%;
+}
+
+::selection {
+    background-color: var(--fg);
+    color: var(--bg);
+}
+
+.hidden {
+    display: none;
+}
+
+/* ------------------------------ 布局容器 ------------------------------ */
+.container {
+    width: 100%;
+    max-width: 80rem;
+    margin: 0 auto;
+    padding: 0 1.5rem 6rem;
+    display: flex;
+    flex-direction: column;
+}
+
+/* ============================== 页头 ============================== */
+header {
+    padding: 6rem 0 3rem;
+    text-align: center;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+
+.header-dot {
+    position: relative;
+    width: 34px;
+    height: 34px;
+    margin-bottom: 2.5rem;
+    border: 1px solid var(--line-strong);
+    border-radius: 50%;
+    animation: dot-pulse 4s var(--ease) infinite;
+}
+
+.header-dot::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    margin: auto;
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background-color: var(--fg);
+    animation: dot-core 4s var(--ease) infinite;
+}
+
+@keyframes dot-pulse {
+    0%,
+    100% {
+        transform: scale(1);
+        border-color: var(--line-strong);
+    }
+    50% {
+        transform: scale(1.12);
+        border-color: var(--line);
+    }
+}
+
+@keyframes dot-core {
+    0%,
+    100% {
+        opacity: 1;
+    }
+    50% {
+        opacity: 0.45;
+    }
+}
+
+h1 {
+    font-family: var(--serif);
+    font-size: clamp(2rem, 6vw, 4rem);
+    font-weight: 400;
+    letter-spacing: -0.03em;
+    line-height: 1;
+    text-wrap: balance;
+}
+
+/* 标题里的强调：换成衬线斜体，比换色更克制 */
+.title-accent {
+    font-style: italic;
+    position: relative;
+}
+
+.title-accent::after {
+    content: "";
+    position: absolute;
+    left: 0;
+    right: 0;
+    bottom: 0.06em;
+    height: 1px;
+    background-color: var(--line-strong);
+}
+
+header p {
+    max-width: 34rem;
+    margin-top: 1.5rem;
+    color: var(--fg-secondary);
+    font-style: italic;
+}
+
+/* ============================== Meta 行 ============================== */
+.meta-line {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: baseline;
+    justify-content: center;
+    gap: 0.625rem;
+    margin-bottom: 4rem;
+    padding-bottom: 1.5rem;
+    border-bottom: 1px solid var(--line);
+    font-size: 0.6875rem;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--fg-tertiary);
+}
+
+.meta-index {
+    font-family: var(--serif);
+    font-size: 1rem;
+    font-style: italic;
+    letter-spacing: 0;
+    text-transform: none;
+    color: var(--fg);
+}
+
+/* ============================== 作品网格 ============================== */
+.projects-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+    gap: 4rem 2rem;
+    margin-bottom: 6rem;
+}
+
+/* ============================== 作品卡片 ============================== */
+.project {
+    display: flex;
+    flex-direction: column;
+    border: 1px solid var(--line);
+    background-color: transparent;
+    overflow: hidden;
+    cursor: pointer;
+    transition: border-color 0.2s var(--ease), background-color 0.2s var(--ease);
+}
+
+.project:hover {
+    border-color: var(--fg);
+    background-color: var(--tint);
+}
+
+.project:focus-visible {
+    outline: 1px solid var(--fg);
+    outline-offset: 3px;
+}
+
+/* --- 缩略图 --- */
+.project-thumb {
+    position: relative;
+    overflow: hidden;
+    border-bottom: 1px solid var(--line);
+}
+
+.project img {
+    width: 100%;
+    aspect-ratio: 4 / 3;
+    object-fit: cover;
+    transition: transform 1s var(--ease);
+}
+
+.project:hover img {
+    transform: scale(1.05);
+}
+
+/* 悬停时自底部浮起的一层米白雾，压住图片、托出编号 */
+.project-glow {
+    position: absolute;
+    inset: auto 0 0 0;
+    height: 55%;
+    background: linear-gradient(180deg, transparent, rgba(249, 248, 246, 0.85));
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.3s var(--ease);
+}
+
+.project:hover .project-glow {
+    opacity: 1;
+}
+
+/* 图片左上角的编号：全大写小字距，贴在纸面上的感觉 */
+.project-num {
+    position: absolute;
+    top: 0.75rem;
+    left: 0.75rem;
+    z-index: 2;
+    padding: 0.25rem 0.5rem;
+    background-color: var(--bg);
+    border: 1px solid var(--line);
+    font-size: 0.625rem;
+    letter-spacing: 0.2em;
+    line-height: 1.6;
+    color: var(--fg-secondary);
+    transition: border-color 0.2s var(--ease), color 0.2s var(--ease);
+}
+
+.project:hover .project-num {
+    border-color: var(--fg);
+    color: var(--fg);
+}
+
+/* --- 卡片文字区 --- */
+.project-info {
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+    flex: 1;
+    padding: 1.5rem;
+}
+
+.project-title {
+    font-family: var(--serif);
+    font-size: 1.25rem;
+    font-weight: 400;
+    letter-spacing: -0.02em;
+    line-height: 1.2;
+    transition: font-style 0.5s var(--ease);
+}
+
+.project:hover .project-title {
+    font-style: italic;
+}
+
+.project-tag {
+    font-size: 0.6875rem;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--fg-tertiary);
+}
+
+/* 底部那行「查看作品」：下划线自右向左收、自左向右展开 */
+.project-cta {
+    position: relative;
+    align-self: flex-start;
+    margin-top: auto;
+    padding-bottom: 0.25rem;
+    font-size: 0.6875rem;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--fg);
+}
+
+.project-cta::after {
+    content: "";
+    position: absolute;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    height: 1px;
+    background-color: currentColor;
+    transform: scaleX(0);
+    transform-origin: right;
+    transition: transform 0.5s var(--ease);
+}
+
+.project:hover .project-cta::after,
+.project:focus-visible .project-cta::after {
+    transform: scaleX(1);
+    transform-origin: left;
+}
+
+/* ============================== 页脚 ============================== */
+footer {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: baseline;
+    justify-content: center;
+    gap: 0.625rem;
+    padding-top: 1.5rem;
+    border-top: 1px solid var(--line);
+    font-size: 0.6875rem;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--fg-tertiary);
+}
+
+/* ============================== 响应式 ============================== */
+@media (min-width: 900px) {
+    .container {
+        padding: 0 3rem 8rem;
+    }
+
+    header {
+        padding-top: 8rem;
+    }
+}
+
+@media (max-width: 600px) {
+    header {
+        padding: 4rem 0 2rem;
+    }
+
+    .header-dot {
+        margin-bottom: 1.75rem;
+    }
+
+    .meta-line {
+        margin-bottom: 3rem;
+    }
+
+    .projects-grid {
+        grid-template-columns: 1fr;
+        gap: 3rem;
+        margin-bottom: 4rem;
+    }
+}
+
+/* 尊重系统的减弱动效偏好 */
+@media (prefers-reduced-motion: reduce) {
+    *,
+    *::before,
+    *::after {
+        animation-duration: 0.01ms !important;
+        transition-duration: 0.01ms !important;
+    }
+
+    .project:hover img {
+        transform: none;
+    }
+}
